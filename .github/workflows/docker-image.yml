@@ -38,5 +38,5 @@ jobs:
 
       - name: Docker push images
         run: |
-          docker push alvarobk/dev/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
-          docker push alvarobk/dev/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+          docker push alvarobk/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+          docker push alvarobk/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }}
