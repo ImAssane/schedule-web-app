@@ -30,11 +30,11 @@ jobs:
 
       - name: Build Docker image (Laravel)
         run: |
-          docker build --no-cache -t alvarobk/dev/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }} .
+          docker build --no-cache -t alvarobk/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }} .
 
       - name: Build Docker image (Nginx)
         run: |
-          docker build --no-cache -t alvarobk/dev/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
+          docker build --no-cache -t alvarobkschedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
 
       - name: Docker push images
         run: |
