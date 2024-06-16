@@ -33,7 +33,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer update
 RUN composer install
 # --optimize-autoloader --no-dev
-RUN composer require enlightn/enlightn:^1.9
+
 RUN chown -R www-data:www-data /var/www/html/vendor
 
 RUN npm install --only=prod
