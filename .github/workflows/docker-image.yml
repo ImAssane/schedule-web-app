@@ -43,6 +43,7 @@ jobs:
           format: 'table'
           vuln-type: 'os,library'
           severity: 'MEDIUM,HIGH,CRITICAL'
+          scanners: 'vuln' 
   
       - name: Scan Nginx Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@master
@@ -51,6 +52,7 @@ jobs:
             format: 'table'
             vuln-type: 'os,library'
             severity: 'MEDIUM,HIGH,CRITICAL'
+            scanners: 'vuln' 
 
       - name: Docker push images
         run: |
