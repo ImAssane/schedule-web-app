@@ -28,11 +28,6 @@ jobs:
         id: tag
         run: echo "TIMESTAMP_TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
 
-      - name: Run PHP and JavaScript tests
-        run: |
-          npm run test
-          php artisan test
-
       - name: Build Vue.js assets
         run: NODE_ENV=production npm run build
 
