@@ -1,0 +1,43 @@
+version: "3"
+
+networks:
+  schedule:
+
+services: 
+  schedule:
+    image: schedule
+    user: www-data
+    container_name: schedule
+    restart: unless-stopped
+    build:  
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - schedule_data:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    ports:
+      - "9000:9000"
+    networks:
+      - schedule
+
+  schedule_nginx:
+    image:  schedule_nginx
+    #user: www-data
+    container_name: schedule_nginx
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - schedule_data:/var/www/html
+    ports: 
+      - "8000:80"
+    depends_on:
+      - schedule
+    networks:
+      - schedule    
+
+volumes:
+  schedule_data: 
+
+  
