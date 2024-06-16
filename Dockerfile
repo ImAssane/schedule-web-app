@@ -24,7 +24,10 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . . 
 
 RUN chown -R www-data:www-data /var/www/html/storage/logs
-RUN chown -R www-data:www-data /var/www/html/storage/app
+RUN chown -R www-data:www-data /var/www/html/storage
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
+
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer update

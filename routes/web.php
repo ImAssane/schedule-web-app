@@ -59,7 +59,7 @@ Route::get('student/register', [StudentRegisterController::class, 'create'])->na
 Route::post('student/register', [StudentRegisterController::class, 'store'])->name('student.register.store');
 
 Route::get('exam/payment', [PaymentController::class, 'index'])->name('payment.index');
-
+Route::get('/', [WelcomeStudentController::class, 'index'])->name('welcome.index');
 
 
 

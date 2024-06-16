@@ -36,7 +36,43 @@ jobs:
         run: |
           docker build --no-cache -t alvarobk/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
 
+          - name: Scan Laravel Docker image for vulnerabilities
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: alvarobk/dev/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+  
+      - name: Scan Nginx Docker image for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: alvarobk/dev/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+
       - name: Docker push images
         run: |
           docker push alvarobk/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
           docker push alvarobk/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+
+          - name: Scan PHP code for vulnerabilities with PHPStan
+          run: |
+            php artisan vendor:publish --provider="PHPStan\Laravel\PHPStanServiceProvider"
+            ./vendor/bin/phpstan analyse --level=max
+  
+      - name: Scan JavaScript code for vulnerabilities with ESLint
+        run: npx eslint .
+
+      - name: Scan PHP dependencies for vulnerabilities with Enlightn
+        uses: enlightn/enlightn@v0.1.0
+
+      - name: Scan JavaScript dependencies for vulnerabilities with npm audit
+        run: npm audit --audit-level=high
+
+      - name: Scan code for security issues with GitHub CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: 'javascript,php'
+      - run: actions/codeql-action/analyze@v1   
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.9.0
+        with:
+          target: 'http://localhost'
+          docker-name: 'owasp/zap2docker-weekly'
+   
