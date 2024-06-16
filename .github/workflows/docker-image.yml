@@ -28,9 +28,7 @@ jobs:
         id: tag
         run: echo "TIMESTAMP_TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
 
-      - name: Build Vue.js assets
-        run: NODE_ENV=production npm run build
-
+  
       - name: Build Docker image (Laravel)
         run: |
           docker build --no-cache -t alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} .
