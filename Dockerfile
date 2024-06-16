@@ -39,6 +39,6 @@ RUN npm install --only=prod
 RUN npm install --save-dev laravel-vite-plugin
 
 
-RUN npm run build
+RUN NODE_ENV=production npm run build
 
 CMD  ["php-fpm", "-F"]

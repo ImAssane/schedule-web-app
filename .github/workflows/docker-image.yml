@@ -36,11 +36,11 @@ jobs:
         run: |
           docker build --no-cache -t alvarobk/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
 
-          - name: Scan Laravel Docker image for vulnerabilities
-          uses: aquasecurity/trivy-action@master
-          with:
-            image-ref: alvarobk/dev/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
-  
+      - name: Scan Laravel Docker image for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: alvarobk/dev/scheduleapp:${{ steps.tag.outputs.TIMESTAMP_TAG }}
+
       - name: Scan Nginx Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
