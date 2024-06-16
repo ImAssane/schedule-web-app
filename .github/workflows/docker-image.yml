@@ -34,7 +34,7 @@ jobs:
 
       - name: Build Docker image (Nginx)
         run: |
-          docker build --no-cache -t alvarobkschedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
+          docker build --no-cache -t alvarobk/schedulenginx:${{ steps.tag.outputs.TIMESTAMP_TAG }} ./docker/nginx
 
       - name: Docker push images
         run: |
