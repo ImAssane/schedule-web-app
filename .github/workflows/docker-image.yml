@@ -60,17 +60,12 @@ jobs:
           docker push alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
           docker push alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
-      - name: Scan PHP code for vulnerabilities with PHPStan
+      - name: Scan PHP dependencies for vulnerabilities with Enlightn
         run: |
-          php artisan vendor:publish --provider="PHPStan\Laravel\PHPStanServiceProvider"
-          ./vendor/bin/phpstan analyse --level=max
+          docker run --rm alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} php artisan enlightn --no-interaction
 
       - name: Scan JavaScript code for vulnerabilities with ESLint
         run: npx eslint .
-
-      - name: Scan PHP dependencies for vulnerabilities with Enlightn
-        run: |
-          php artisan enlightn --no-interaction
 
       - name: Scan JavaScript dependencies for vulnerabilities with npm audit
         run: npm audit --audit-level=high
