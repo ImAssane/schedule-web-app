@@ -69,9 +69,11 @@ jobs:
           languages: 'javascript,python'
       - run: |
           sudo apt-get install jq
+          set -e
           curl -s https://api.github.com/repos/github/codeql-action/releases/latest | jq -r '.assets[].browser_download_url | select(contains("ubuntu"))' | xargs curl -L -o codeql-ubuntu.tar.gz
           tar -xzf codeql-ubuntu.tar.gz -C /home/runner
           /home/runner/codeql/codeql database create codeql-db -s . -l javascript,python
+
 
       # - name: SCA (Software Composition Analysis)
       #   uses: aquasecurity/trivy-action@master
