@@ -59,15 +59,19 @@ jobs:
           docker push alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
           docker push alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
-      - name: SAST (Static Application Security Testing)
-        uses: github/codeql-action/init@v2
-        with:
-          languages: 'javascript,python'
-      - run: |
-            sudo apt-get install jq
-            curl -s https://api.github.com/repos/github/codeql-action/releases/latest | jq -r '.assets[].browser_download_url | select(contains("ubuntu"))' | xargs curl -L -o codeql-ubuntu.tar.gz
-            tar -xzf codeql-ubuntu.tar.gz -C /home/runner
-            /home/runner/codeql/codeql database create codeql-db -s . -l javascript,python
+      - name: Scan PHP dependencies for vulnerabilities with Enlightn
+        run: |
+          docker run --rm alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} php artisan enlightn --no-interaction
+
+      # - name: SAST (Static Application Security Testing)
+      #   uses: github/codeql-action/init@v2
+      #   with:
+      #     languages: 'javascript,python'
+      #   - run: |
+      #       sudo apt-get install jq
+      #       curl -s https://api.github.com/repos/github/codeql-action/releases/latest | jq -r '.assets[].browser_download_url | select(contains("ubuntu"))' | xargs curl -L -o codeql-ubuntu.tar.gz
+      #       tar -xzf codeql-ubuntu.tar.gz -C /home/runner
+      #       /home/runner/codeql/codeql database create codeql-db -s . -l javascript,python
 
       - name: SCA (Software Composition Analysis)
         uses: aquasecurity/trivy-action@master
