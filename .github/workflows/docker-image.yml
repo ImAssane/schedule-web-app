@@ -68,9 +68,11 @@ jobs:
         with:
           languages: 'javascript,python'
       - run: |
+          sudo apt-get update
           sudo apt-get install jq
           set -e
-          curl -s https://api.github.com/repos/github/codeql-action/releases/latest | jq -r '.assets[].browser_download_url | select(contains("ubuntu"))' | xargs curl -L -o codeql-ubuntu.tar.gz
+          url=$(curl -s https://api.github.com/repos/github/codeql-action/releases/latest | jq -r '.assets[].browser_download_url | select(contains("ubuntu"))')
+          curl -L -o codeql-ubuntu.tar.gz $url
           tar -xzf codeql-ubuntu.tar.gz -C /home/runner
           /home/runner/codeql/codeql database create codeql-db -s . -l javascript,python
 
