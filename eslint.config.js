@@ -1,3 +1,4 @@
+// eslint.config.js
 import { Linter } from "eslint";
 
 /** @type {Linter.Config} */

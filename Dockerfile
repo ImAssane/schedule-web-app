@@ -38,6 +38,8 @@ RUN chown -R www-data:www-data /var/www/html/vendor
 
 RUN npm install --only=prod
 RUN npm install --save-dev laravel-vite-plugin
+RUN npm install eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
+
 
 
 RUN NODE_ENV=production npm run build
