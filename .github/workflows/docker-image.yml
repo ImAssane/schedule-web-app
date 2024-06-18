@@ -83,19 +83,22 @@ jobs:
           sarif_file: results.sarif
           format: 'table'
       
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.12.0
-        with:
-          target: 'https://www.zaproxy.org'
       - name: Set up Docker Compose
         run: |
          docker-compose up -d
+
       - name: StackHawk HawkScan Action   
         uses: stackhawk/hawkscan-action@v2.1.3
         with:
           apiKey: ${{ secrets.HAWK_API_KEY }}        
-
-
+      - name: teste
+        uses: actions/checkout@v2
+        id: cache-db
+        with:
+            path: ~/.symfony/cache
+            key: db
+      - uses: symfonycorp/security-checker-action@v5
+      
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
         env:
