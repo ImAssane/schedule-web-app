@@ -20,10 +20,6 @@ RUN apt-get install -y nodejs npm
 
 WORKDIR /var/www/html
 
-COPY package*.json ./
-COPY composer.json ./
-COPY composer.lock ./
-
 
 COPY --chown=www-data:www-data . . 
 
