@@ -73,7 +73,7 @@ jobs:
       - name: Scan code for security issues with GitHub CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: 'javascript,php'
+          languages: 'javascript'
       - run: github/codeql-action/analyze@v2
 
       - name: Run OWASP ZAP Baseline Scan
