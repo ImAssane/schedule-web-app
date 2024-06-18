@@ -69,34 +69,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        
-      # - name: PHP STatic ANalyser (phpstan)
-      #   uses: chindit/actions-phpstan@1.0.2
-      #   with:
-          # Arguments to add to PHPStan
-          # arguments: 'src/ --level=7'    
-
-
-      # - name: Run OWASP ZAP Baseline Scan
-      #   uses: zaproxy/action-baseline@v0.12.0
-      #   with:
-      #     target: 'https://www.zaproxy.org'
-          
-  # sonarcloud:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
-    #     fetch-depth: 0
-    # - name: SonarCloud Scan
-    #   uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  psalm-security-scan:
-    name: Psalm
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -107,5 +79,10 @@ jobs:
         uses: psalm/psalm-github-security-scan@1.4.0
         with:
           sarif_file: results.sarif
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
         
 
