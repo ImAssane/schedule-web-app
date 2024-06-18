@@ -71,11 +71,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        
-      - name: Checkout code
-        uses: actions/checkout@v3
 
       - name: Psalm Security Scan
         uses: psalm/psalm-github-security-scan@1.4.0
+        with:
+            format: 'table'
         
       - name: Import Security Analysis results into GitHub Security Code Scanning
         uses: psalm/psalm-github-security-scan@1.4.0
@@ -83,10 +83,10 @@ jobs:
           sarif_file: results.sarif
           format: 'table'
       
-      # - name: ZAP Scan
-      #   uses: zaproxy/action-baseline@v0.12.0
-      #   with:
-      #     target: 'https://www.zaproxy.org'
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'https://www.zaproxy.org'
       - name: Set up Docker Compose
         run: |
          docker-compose up -d
@@ -96,12 +96,12 @@ jobs:
           apiKey: ${{ secrets.HAWK_API_KEY }}        
 
 
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_PROJECT_KEY: AlvaroBk_schedule-web-app
-      #     SONAR_ORGANIZATION: alvarobk
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: AlvaroBk_schedule-web-app
+          SONAR_ORGANIZATION: alvarobk
 
        
     
