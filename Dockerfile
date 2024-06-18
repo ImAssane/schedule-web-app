@@ -35,7 +35,7 @@ RUN composer install
 # --optimize-autoloader --no-dev
 
 # Run ESLint
-RUN npx eslint . || true
+#RUN npx eslint . || true
 
 # Install PHPStan
 RUN composer require --dev phpstan/phpstan
