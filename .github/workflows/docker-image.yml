@@ -66,25 +66,9 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.20.3'  # Ensure you're using a compatible Node.js version
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run ESLint for JavaScript
-        run: npx eslint .
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
-          tools: composer
-
-      - name: Install PHPStan
+      - name: Build and run Docker container for SAST checks
         run: |
-          composer require --dev phpstan/phpstan
-          vendor/bin/phpstan analyse src --level max
+          docker build -t sast-checks .
+          docker run --rm sast-checks
 
+    
