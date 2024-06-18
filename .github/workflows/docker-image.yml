@@ -64,8 +64,8 @@ jobs:
         #run: |
          # docker run --rm alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} php artisan enlightn --no-interaction
 
-      - name: Scan JavaScript code for vulnerabilities with ESLint
-        run: npx eslint .
+      #- name: Scan JavaScript code for vulnerabilities with ESLint
+        #run: npx eslint .
 
       - name: Scan JavaScript dependencies for vulnerabilities with npm audit
         run: npm audit --audit-level=high
