@@ -71,4 +71,4 @@ jobs:
           docker build -t sast-checks .
           docker run --rm sast-checks
 
-    
+     
