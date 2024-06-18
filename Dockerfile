@@ -20,6 +20,10 @@ RUN apt-get install -y nodejs npm
 
 WORKDIR /var/www/html
 
+COPY package*.json ./
+COPY composer.json ./
+COPY composer.lock ./
+
 
 COPY --chown=www-data:www-data . . 
 
@@ -33,6 +37,13 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer update
 RUN composer install
 # --optimize-autoloader --no-dev
+
+# Run ESLint
+RUN npx eslint .
+
+# Install PHPStan
+RUN composer require --dev phpstan/phpstan
+RUN vendor/bin/phpstan analyse src --level max
 
 RUN chown -R www-data:www-data /var/www/html/vendor
 
