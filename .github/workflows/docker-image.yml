@@ -87,7 +87,9 @@ jobs:
       #   uses: zaproxy/action-baseline@v0.12.0
       #   with:
       #     target: 'https://www.zaproxy.org'
- 
+      - name: Set up Docker Compose
+        run: |
+         docker-compose up -d
       - name: StackHawk HawkScan Action   
         uses: stackhawk/hawkscan-action@v2.1.3
         with:
