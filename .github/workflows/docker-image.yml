@@ -62,9 +62,11 @@ jobs:
       - name: Scan JavaScript dependencies for vulnerabilities with npm audit
         run: npm audit --audit-level=high
 
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
+          format: 'table'
           languages: 'javascript'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,9 +81,13 @@ jobs:
         uses: psalm/psalm-github-security-scan@1.4.0
         with:
           sarif_file: results.sarif
+          format: 'table'
       
       - name: ZAP Scan
-      uses: zaproxy/action-af@v0.1.0   
+        uses: zaproxy/action-af@v0.1.0 
+        with:
+          format: 'table'
+
 
       # - name: SonarCloud Scan
       #   uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
