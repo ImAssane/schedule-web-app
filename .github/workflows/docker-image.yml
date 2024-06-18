@@ -83,10 +83,15 @@ jobs:
           sarif_file: results.sarif
           format: 'table'
       
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.12.0
+      # - name: ZAP Scan
+      #   uses: zaproxy/action-baseline@v0.12.0
+      #   with:
+      #     target: 'https://www.zaproxy.org'
+ 
+      - name: StackHawk HawkScan Action   
+        uses: stackhawk/hawkscan-action@v2.1.3
         with:
-          target: 'https://www.zaproxy.org'
+          apiKey: ${{ secrets.HAWK_API_KEY }}        
 
 
       # - name: SonarCloud Scan
