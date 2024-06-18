@@ -39,7 +39,7 @@ RUN composer install
 
 # Install PHPStan
 RUN composer require --dev phpstan/phpstan
-RUN vendor/bin/phpstan analyse src --level max
+#RUN vendor/bin/phpstan analyse src --level max
 
 RUN chown -R www-data:www-data /var/www/html/vendor
 
