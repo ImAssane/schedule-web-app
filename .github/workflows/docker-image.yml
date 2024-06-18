@@ -19,7 +19,7 @@ jobs:
           echo "${{ secrets.SCHEDULE_PRODUCTION_ENV }}" > .env
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -28,7 +28,6 @@ jobs:
         id: tag
         run: echo "TIMESTAMP_TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
 
-  
       - name: Build Docker image (Laravel)
         run: |
           docker build --no-cache -t alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} .
@@ -60,27 +59,42 @@ jobs:
           docker push alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
           docker push alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
-      #- name: Scan PHP dependencies for vulnerabilities with Enlightn
-        #run: |
-         # docker run --rm alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} php artisan enlightn --no-interaction
+  sast_checks:
+    name: SAST Checks for JavaScript and PHP
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
 
-      #- name: Scan JavaScript code for vulnerabilities with ESLint
-        #run: npx eslint .
+      - name: Build and run Docker container for SAST checks
+        run: |
+          docker build -t sast-checks .
+          docker run --rm sast-checks
 
-      - name: Scan JavaScript dependencies for vulnerabilities with npm audit
-        run: npm audit --audit-level=high
-
-      - name: Scan code for security issues with GitHub CodeQL
+      - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: 'javascript'
+          languages: javascript
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:javascript,php"
 
-      - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.9.0
-        with:
-          target: 'http://localhost'
-          docker-name: 'owasp/zap2docker-weekly'
+      # Uncomment the following if you prefer using SonarCloud for comprehensive SAST
+      # - name: Set up SonarCloud
+      #   uses: sonarsource/sonarcloud-github-action@master
+      #   with:
+      #     sonar_token: ${{ secrets.SONAR_TOKEN }}
+
+      # - name: Run SonarCloud Scan
+      #   run: |
+      #     sonar-scanner \
+      #     -Dsonar.projectKey=my_project_key \
+      #     -Dsonar.organization=my_org \
+      #     -Dsonar.host.url=https://sonarcloud.io \
+      #     -Dsonar.login=${{ secrets.SONAR_TOKEN }}
