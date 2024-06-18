@@ -28,7 +28,6 @@ jobs:
         id: tag
         run: echo "TIMESTAMP_TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
 
-  
       - name: Build Docker image (Laravel)
         run: |
           docker build --no-cache -t alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} .
@@ -60,24 +59,22 @@ jobs:
           docker push alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
           docker push alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
-      #- name: Scan PHP dependencies for vulnerabilities with Enlightn
-        #run: |
-         # docker run --rm alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} php artisan enlightn --no-interaction
-
-      #- name: Scan JavaScript code for vulnerabilities with ESLint
-        #run: npx eslint .
-
       - name: Scan JavaScript dependencies for vulnerabilities with npm audit
         run: npm audit --audit-level=high
 
-      - name: Scan code for security issues with GitHub CodeQL
+      - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
-          languages: 'javascript'
+          languages: 'javascript,php'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:javascript,php"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.9.0
