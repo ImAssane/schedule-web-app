@@ -1,0 +1,67 @@
+name: Devsecops
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+      - name: Scan Laravel Docker image for vulnerabilities (TRIVY)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ivan/scheduleapp:${{ env.TIMESTAMP_TAG }}
+          format: 'table'
+          vuln-type: 'os,library'
+          severity: 'MEDIUM,HIGH,CRITICAL'
+          scanners: 'vuln' 
+
+      - name: Scan Nginx Docker image for vulnerabilities (TRIVY)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ivan/schedulenginx:${{ env.TIMESTAMP_TAG }}
+          format: 'table'
+          vuln-type: 'os,library'
+          severity: 'MEDIUM,HIGH,CRITICAL'
+          scanners: 'vuln'  
+
+      - name: Scan vue.js dependencies for vulnerabilities with npm audit
+        run: npm audit --audit-level=high
+
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          format: 'table'
+          languages: 'javascript'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       
+
+      - name: Psalm Security Scan
+        uses: psalm/psalm-github-security-scan@1.4.0
+        with:
+            format: 'table'
+        
+      - name: Import Security Analysis results into GitHub Security Code Scanning
+        uses: psalm/psalm-github-security-scan@1.4.0
+        with:
+          sarif_file: results.sarif
+          format: 'table'
+      
+
+      - name: Set up Docker Compose
+        run: |
+         docker-compose up -d
+
+      - name: StackHawk HawkScan Action   
+        uses: stackhawk/hawkscan-action@v2.1.3
+        with:
+          apiKey: ${{ secrets.HAWK_API_KEY }}        
+     
+
+      
+     
+    
+        
+
