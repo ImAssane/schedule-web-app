@@ -24,94 +24,82 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+
       - name: Generate timestamp-based tag
         id: tag
         run: echo "TIMESTAMP_TAG=$(date +'%y%m%d')" >> $GITHUB_ENV
 
       - name: Build Docker image (Laravel)
         run: |
-          docker build --no-cache -t alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }} .
+          docker build --no-cache -t iamdocker100/scheduleapp:${{ env.TIMESTAMP_TAG }} .
 
       - name: Build Docker image (Nginx)
         run: |
-          docker build --no-cache -t alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }} ./docker/nginx
+          docker build --no-cache -t iamdocker100/schedulenginx:${{ env.TIMESTAMP_TAG }} ./docker/nginx
+          
 
-      - name: Scan Laravel Docker image for vulnerabilities
+      - name: Scan Laravel Docker image for vulnerabilities (SCA)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
+          image-ref: iamdocker100/scheduleapp:${{ env.TIMESTAMP_TAG }}
           format: 'table'
           vuln-type: 'os,library'
           severity: 'MEDIUM,HIGH,CRITICAL'
-          scanners: 'vuln'  # Disable secret scanning
+          scanners: 'vuln'  
 
-      - name: Scan Nginx Docker image for vulnerabilities
+      - name: Scan Nginx Docker image for vulnerabilities (SAST)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
+          image-ref: iamdocker100/schedulenginx:${{ env.TIMESTAMP_TAG }}
+          scan-type: 'fs'
           format: 'table'
           vuln-type: 'os,library'
           severity: 'MEDIUM,HIGH,CRITICAL'
-          scanners: 'vuln'  # Disable secret scanning
+          scanners: 'vuln' 
+          
+      - name: Run Gitleaks (SCC)
+        id: gitleaks
+        uses: DariuszPorowski/github-action-gitleaks@v2
+        with:
+          fail: false
+
+      - name: Post PR comment
+        uses: actions/github-script@v6
+        if: ${{ steps.gitleaks.outputs.exitcode == 1 && github.event_name == 'pull_request' }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const { GITLEAKS_RESULT, GITLEAKS_OUTPUT } = process.env
+            const output = `### ${GITLEAKS_RESULT}
+
+            <details><summary>Log output</summary>
+
+            ${GITLEAKS_OUTPUT}
+
+            </details>
+            `
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: output
+            })
+        env:
+          GITLEAKS_RESULT: ${{ steps.gitleaks.outputs.result }}
+          GITLEAKS_OUTPUT: ${{ steps.gitleaks.outputs.output }}     
 
       - name: Docker push images
         run: |
-          docker push alvarobk/scheduleapp:${{ env.TIMESTAMP_TAG }}
-          docker push alvarobk/schedulenginx:${{ env.TIMESTAMP_TAG }}
+          docker push iamdocker100/scheduleapp:${{ env.TIMESTAMP_TAG }}
+          docker push iamdocker100/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
       - name: Scan JavaScript dependencies for vulnerabilities with npm audit
         run: npm audit --audit-level=high
-
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          format: 'table'
-          languages: 'javascript'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       
-
-      - name: Psalm Security Scan
-        uses: psalm/psalm-github-security-scan@1.4.0
-        with:
-            format: 'table'
-        
-      - name: Import Security Analysis results into GitHub Security Code Scanning
-        uses: psalm/psalm-github-security-scan@1.4.0
-        with:
-          sarif_file: results.sarif
-          format: 'table'
-      
 
       - name: Set up Docker Compose
         run: |
          docker-compose up -d
 
-      - name: StackHawk HawkScan Action   
+      - name: StackHawk HawkScan Action (DAST)
         uses: stackhawk/hawkscan-action@v2.1.3
         with:
-          apiKey: ${{ secrets.HAWK_API_KEY }}        
-      - name: teste
-        uses: actions/checkout@v2
-        id: cache-db
-        with:
-            path: ~/.symfony/cache
-            key: db
-      - uses: symfonycorp/security-checker-action@v5
-
-      
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@v2.3.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   with:
-      #       args: >
-      #             Dsonar.organization:alvarobk
-      #             Dsonar.projectKey:AlvaroBk_schedule-web-app
-                  
-
-       
-    
-        
-
+          apiKey: ${{ secrets.HAWK_API_KEY }}
