@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ConsultController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PatientController;
@@ -58,10 +59,18 @@ Route::post('student/login', [StudentAuthenticationController::class, 'store'])-
 Route::get('student/register', [StudentRegisterController::class, 'create'])->name('student.register.create');
 Route::post('student/register', [StudentRegisterController::class, 'store'])->name('student.register.store');
 
+Route::get('certification/register', [DashboardController::class, 'create'])->name('certifications.create');
+Route::post('certification/register', [DashboardController::class, 'store'])->name('certifications.store');
+Route::get('certifications/{cert}/edit', [DashboardController::class, 'edit'])->name('certifications.edit');
+Route::put('certification/{cert}', [DashboardController::class, 'update'])->name('certifications.update');
+Route::delete('certification/{certification}', [DashboardController::class, 'destroy'])->name('certifications.destroy');
+
 Route::get('exam/payment', [PaymentController::class, 'index'])->name('payment.index');
 Route::get('/', [WelcomeStudentController::class, 'index'])->name('welcome.index');
 
 
+Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+Route::get('reports/create', [ReportController::class, 'create'])->name('reports.create');
 
 
 //* -- Dashboard

@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user ? [
                     'id' => $user->id,
                     'name' => $user->name,
+                    'isAdmin'=> $user->role == 'Admin' ? true : false
                 ] : null,
             ],
             'flash' => [

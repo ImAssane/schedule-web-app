@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('examinations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('certification_id')->constrained('certifications');
+            $table->foreignId('created_by')->constrained('users');
             $table->date('date');
             $table->time('time');
-            $table->string('city');
-            $table->string('post_code');
-            $table->string('address');
+            $table->string('status')->nullable();
+            $table->string('attempts')->nullable();
             $table->timestamps();
         });
     }

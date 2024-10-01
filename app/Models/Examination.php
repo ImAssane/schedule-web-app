@@ -5,17 +5,16 @@ namespace App\Models;
 use App\Models\Certification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Traits\MultitenantableUserTrait;
 
 class Examination extends Model
 {
-    use HasFactory;
+    use HasFactory,MultitenantableUserTrait;
     protected $fillable = [
         'date',
         'time',
-        'city',
         'certification_id',
-        'address',
-        'post_code'
+        'created_by'
 
     ];
 

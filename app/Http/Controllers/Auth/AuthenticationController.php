@@ -19,10 +19,14 @@ class AuthenticationController extends Controller
 
     public function store(/* AuthenticationRequest */Request $request)
     {
+       
         $request->authenticate();
 
         $request->session()->regenerate();
-
+       
+        if(Auth::user()->role == 'Admin'){
+            return redirect()->route('dashboard.index');
+        }
         return redirect()->route('examination.index');
     }
 

@@ -53,7 +53,7 @@
         </div>
 
         <div v-if="createPath" class="mt-4">
-          <Link as="button" type="button" :href="$route(createPath)" class="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:w-auto\">Marcar exame</Link>
+          <Link as="button" type="button" :href="$route(createPath)" class="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 sm:w-auto\">{{ titles.button }}</Link>
         </div>
       </div>
 
@@ -98,11 +98,5 @@
     router.get(route(props.filterPath), pickBy({search: value.search , status: value.status}), { preserveState: true, replace: true}) 
   },300),{ deep: true } );
 
-
-  // PARA AILTON QUE PC DELE TA PODRE
-  /*   watch(form, value => {
-    router.get(route(props.filterPath),  {search: value.search , status: value.status} , { preserveState: true, replace: true}) 
-  },{ deep: true }); */
-  
 </script>
 

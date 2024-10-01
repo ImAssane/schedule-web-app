@@ -10,4 +10,12 @@ class Certification extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'dates',
+        'price',
+        'start_date',
+        'end_date'
+    ];
+
 }

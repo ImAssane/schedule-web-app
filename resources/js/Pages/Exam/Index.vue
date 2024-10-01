@@ -5,7 +5,7 @@
 
   <BreadCrumb :breadItems="breadItems" />
 
-  <TableHead :titles="titles"  :createPath="'examination.create'"/>
+  <TableHead :titles="titles"  :createPath="'examination.create'" />
 
     <div class="mt-8 flow-root">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -40,8 +40,14 @@
                       Editar
                     </Link> -->
 
-                    <a as="button" type="button" href="/examinations/edit" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <a v-show="item.status === 'Aprovado'" as="button" type="button" href="/examinations/edit" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                       Detalhes
+                    </a>
+                    <a v-show="item.status === 'Pending'"  as="button" type="button" href="#" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      Cancelar
+                    </a>
+                    <a v-show="item.status === 'Reprovado'"  as="button" type="button" href="#" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      Remarcar
                     </a>
                    
                   </div>
@@ -87,6 +93,7 @@ const breadItems = {
 const titles = {
   subTitle: 'Registos',
   description: 'Histórico de exames realizadas pelo candidato.',
+  button:'Marcar exame'
 }
 
 const modalInfo = {

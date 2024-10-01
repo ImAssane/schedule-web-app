@@ -38,14 +38,14 @@ jobs:
           docker build --no-cache -t iamdocker100/schedulenginx:${{ env.TIMESTAMP_TAG }} ./docker/nginx
           
 
-      - name: Scan Laravel Docker image for vulnerabilities (SCA)
+      - name: Scan Laravel Docker image for vulnerabilities (CSA)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: iamdocker100/scheduleapp:${{ env.TIMESTAMP_TAG }}
           format: 'table'
           vuln-type: 'os,library'
           severity: 'MEDIUM,HIGH,CRITICAL'
-          scanners: 'vuln'  
+          scanners: 'vuln'   
 
       - name: Scan Nginx Docker image for vulnerabilities (SAST)
         uses: aquasecurity/trivy-action@master
@@ -92,7 +92,7 @@ jobs:
           docker push iamdocker100/scheduleapp:${{ env.TIMESTAMP_TAG }}
           docker push iamdocker100/schedulenginx:${{ env.TIMESTAMP_TAG }}
 
-      - name: Scan JavaScript dependencies for vulnerabilities with npm audit
+      - name: Scan JavaScript dependencies for vulnerabilities with npm audit (SCA)
         run: npm audit --audit-level=high
 
       - name: Set up Docker Compose

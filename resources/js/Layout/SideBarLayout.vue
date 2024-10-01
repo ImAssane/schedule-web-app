@@ -27,7 +27,8 @@
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <Link :href="$route(item.href)" :class="[isUrl(item.url) ? 'bg-gray-50 text-blue-800' : 'text-gray-700 hover:text-blue-800 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                          {{user.isAdmin==item.isAdmin  }}
+                          <Link v-if="user.isAdmin==item.isAdmin" :href="$route(item.href)" :class="[isUrl(item.url) ? 'bg-gray-50 text-blue-800' : 'text-gray-700 hover:text-blue-800 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                             <component :is="item.icon" :class="[isUrl(item.url) ? 'text-blue-800' : 'text-gray-400 group-hover:text-blue-800', 'h-6 w-6 shrink-0']" aria-hidden="true" />
                             {{ item.name }}
                           </Link>
@@ -55,7 +56,8 @@
             <li>
               <ul role="list" class="-mx-2 space-y-1">
                 <li v-for="item in navigation" :key="item.name">
-                  <Link as="a" :href="$route(item.href)" :class="[isUrl(item.url) ? 'bg-gray-50 text-blue-800' : 'text-gray-700 hover:text-blue-800 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
+                  
+                  <Link v-if="user.isAdmin==item.isAdmin" as="a" :href="$route(item.href)" :class="[isUrl(item.url) ? 'bg-gray-50 text-blue-800' : 'text-gray-700 hover:text-blue-800 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold']">
                     <component :is="item.icon" :class="[isUrl(item.url) ? 'text-blue-800' : 'text-gray-400 group-hover:text-blue-800', 'h-6 w-6 shrink-0']" aria-hidden="true" />
                     {{ item.name }}
                   </Link>
@@ -85,10 +87,10 @@
               <MenuButton class="-m-1.5 flex items-center p-1.5">
                 <span class="sr-only">Open user menu</span>
                 <div class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full ">
-                    <span class="font-medium text-gray-400 "> C</span>
+                    <span class="font-medium text-gray-400 "> {{ user.name[0] }}</span>
                 </div>
                 <span class="hidden lg:flex lg:items-center">
-                  <span class="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true"> Carlos Estevão </span>
+                  <span class="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">{{ user.name }} </span>
                   <ChevronDownIcon class="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                 </span>
               </MenuButton>
@@ -142,10 +144,10 @@ import { usePage } from '@inertiajs/vue3'
 
 
 const navigation = [
-  { name: 'Painel de Controle', href: 'dashboard.index', icon: ChartBarIcon , url: ''},
-  /*{ name: 'Aprovações', href: 'medicals.approval.index', icon: UserPlusIcon , url: 'medicals-approvals'},
-  { name: 'Consultas', href: 'medicals.consults.index', icon: PlusCircleIcon , url: 'medical/consults'},*/
-  { name: 'Meus exames', href: 'examination.index', icon: PlusCircleIcon , url: 'examinations'},
+  { name: 'Painel de Controle', href: 'dashboard.index', icon: ChartBarIcon , url: 'dashboard', isAdmin:true},
+  { name: 'Relatórios', href: 'reports.create', icon: UserPlusIcon , url: 'reports/create',isAdmin:true},
+  /*{ name: 'Consultas', href: 'medicals.consults.index', icon: PlusCircleIcon , url: 'medical/consults'},*/
+   { name: 'Meus exames', href: 'examination.index', icon: PlusCircleIcon , url: 'examinations',isAdmin:false},
   /* { name: 'Pacientes', href: 'patients.index', icon: UserIcon , url: 'patient'}, */
 ]
 
@@ -155,6 +157,8 @@ const userNavigation = [
 
 const sidebarOpen = ref(false);
 const user = usePage().props.auth.user;
+
+console.log(user)
 
 function isUrl(...urls){
   let currentUrl = usePage().url.substring(1)

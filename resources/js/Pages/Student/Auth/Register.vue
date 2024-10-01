@@ -69,7 +69,7 @@
 
               <!-- Data -->
               <div class="sm:col-span-3">
-                <TextInput id="birth-date"  v-model="form.birth_date" :error="form.errors.birth_date"  label="Data" placeholder="DD/MM/YYYY"/>
+                <TextInput id="birth-date"  v-model="form.birth_date" :error="form.errors.birth_date"  label="Data de Nascimento" placeholder="DD/MM/YYYY"/>
               </div>
               <!-- Nacionalidade -->
               <div class="sm:col-span-3">
@@ -134,7 +134,8 @@
               <!-- Provincia -->
               <div class="sm:col-span-3"> 
                 <select-input v-model="form.province_id" :error="form.errors.province_id" label="Província">
-                  <option v-for="item in provinces" :key="item.id" :value="item.id">{{item.name}}</option> 
+                  <option v-for="item in provinces" :key="item.id" :value="item.id">{{item.name}}</option>
+                   
                 </select-input>
               </div>
 

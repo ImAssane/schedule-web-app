@@ -15,14 +15,14 @@ class ExaminationController extends Controller
     public function index()
     {
       
-        $appointments = Examination::whereHas('certification')->with('certification')->get()
+        $appointments = Examination::whereHas('certification')->with('certification')->where('created_by',Auth::user()->id)->get()
         ->transform(fn ($appointments) => [
             'id' => $appointments->id,
             'appointment_date'=> $appointments->date,
             'time'=>$appointments->time,
-            'status' => 'Pending',
+            'status' => $appointments->status,
             'certification'=> $appointments->certification->name,
-            'attempts'=>'2',
+            'attempts'=>$appointments->attempts,
             
         
         ]);
